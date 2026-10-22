@@ -1,33 +1,27 @@
-# Clone App — Independent MVP
+# Clone App — Independent Phase 1 Video MVP
 
-A clean-room desktop-video-studio starter, not a copy of proprietary application assets or licensing code.
+Independent implementation, **not** proprietary HL Studio code.
 
-## Run locally
+## What works
+- Browser UI, local Python HTTP server
+- Upload JPG/PNG/WebP images and MP4/MOV/WebM videos (max 100MB per file)
+- Create/select/save project with a list of uploaded media IDs
+- Export a sequential 1280x720, 25 fps, silent MP4 using FFmpeg. Each image lasts 1-10 seconds; uploaded videos keep their duration. No transitions or audio yet.
+- GitHub Actions runs Python tests on Windows; **Actions does not launch or publish this server.**
 
-```bat
-cd /d D:\ReverseLab\clone
-python backend\server.py
-```
+## Running on Windows
+1. Install Python 3.10+ and FFmpeg, ensure both commands work in CMD: `python --version` and `ffmpeg -version`.
+2. Download repository ZIP from GitHub (Code > Download ZIP), extract it.
+3. In CMD inside repository root: `python backend\server.py`
+4. Open `http://127.0.0.1:8790` in the browser.
+5. Select/create a project, import media, then export MP4. Files are stored under `data/` locally (gitignored).
 
-Open http://127.0.0.1:8790 in your browser.
+## Limitations
+- Media file validation currently checks extension and upload size, not full file content; only import files you trust.
+- Export runs synchronously and may take time; no progress or cancellation yet.
+- Imported video audio is stripped. No timeline editor, AI, voice, C# launcher or ready-to-install EXE yet.
+- Backend is localhost only; do not expose it to the public Internet.
+- Some codecs may require an FFmpeg build with libx264.
 
-## Current scope
-- Local HTTP server
-- Create/list project metadata
-- Web interface
-- CI tests on Windows
-
-## Not implemented yet
-- Media upload/processing
-- Timeline editor
-- MP4 rendering
-- C# WebView2 launcher
-- AI services
-
-## Next engineering tasks
-1. Add secure media import and local file storage.
-2. Create FFmpeg worker with job progress, cancellation and tests.
-3. Add Windows launcher with WebView2 once backend is stable.
-4. Add timeline and voice features independently.
-
-Do not commit original application binaries, compiled private modules, private models, API keys, or third-party assets without permissions.
+## CI
+`.github/workflows/ci.yml` runs `python -m pytest tests -q` on Windows.
